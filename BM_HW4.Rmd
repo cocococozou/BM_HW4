@@ -2,10 +2,257 @@
 title: "BM_HW4"
 author: "Coco"
 date: "11/9/2018"
-output: pdf_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(multcomp)
 ```
+
+##Problem 1
+###a
+The Least Squares estimators of $\beta_{0}$ and $\beta_{1}$ are shown below:
+$$
+\begin{aligned}
+\hat{\beta_{0}} &= \bar{Y} - \hat{\beta_{1}}\bar{X}\\
+\hat{\beta_{1}} &= \frac{\sum_{i=1}^{n} (X_{i} - \bar{X})(Y_{i} - \bar{Y})} {\sum_{i=1}^{n} (X_{i} - \bar{X})^2} \\
+&= \frac{\sum_{i=1}^{n} X_{i}Y{i} - n\bar{X}\bar{Y}}{\sum_{i=1}^{n}X_{i}^2 - n\bar{X}^2}
+\end{aligned}
+$$
+To show they are unbiased estimators, we need to show $E(\hat{\beta}_{0}) = \beta_{0}$ and $E(\hat{\beta}_{1}) = \beta_{1}$
+
+The derivation is shown below: 
+$$
+\begin{aligned}
+E(\hat{\beta_{1}}) &= E(\frac{\sum_{i=1}^{n} (X_{i} - \bar{X})(Y_{i} - \bar{Y})} {\sum_{i=1}^{n} (X_{i} - \bar{X})^2}) \\
+&= E(\frac{\sum_{i=1}^{n} (X_{i} - \bar{X})Y_{i} - \sum_{i=1}^{n} (X_{i} - \bar{X})\bar{Y}} {\sum_{i=1}^{n} (X_{i} - \bar{X})^2})\\
+&= E(\frac{\sum_{i=1}^{n} (X_{i} - \bar{X})Y_{i}} {\sum_{i=1}^{n} (X_{i} - \bar{X})^2}) \\
+&= E(\frac{\sum_{i=1}^{n} (X_{i} - \bar{X})(\beta_{0}+\beta_{1}X_{i}+\epsilon_{i})} {\sum_{i=1}^{n} (X_{i} - \bar{X})^2}) \\
+&= E(\frac{\sum_{i=1}^{n} (X_{i} - \bar{X})(\beta_{1}X_{i})} {\sum_{i=1}^{n} (X_{i} - \bar{X})^2})\\
+&=\beta_{1}E( \frac{\sum_{i=1}^{n} (X_{i} - \bar{X})(X_{i})} {\sum_{i=1}^{n} (X_{i} - \bar{X})X_{i} - \sum_{i=1}^{n} (X_{i} - \bar{X})\bar{X}}) \\
+&= \beta_{1}E(\frac{\sum_{i=1}^{n} (X_{i} - \bar{X})(X_{i})} {\sum_{i=1}^{n} (X_{i} - \bar{X})X_{i}})\\
+&= \beta_{1}
+\end{aligned}
+
+\begin{aligned}
+E(\hat{\beta_{0}}) &= E(\bar{Y} - \hat{\beta_{1}}\bar{X}) \\
+&=\bar{Y} - \bar{X}E(\hat{\beta_{1}})\\
+&=\bar{Y} - \bar{X}\beta_{1}\\
+&=\beta_{0}
+\end{aligned}
+$$
+
+##b
+The Least Sqaure line equation is:
+$$
+\hat{Y_{i} }= \hat{\beta_{0}} + \hat{\beta_{1}}X_{i}
+$$
+
+We plug in the $\bar{X}$ into the equation and have:
+
+$$
+\begin{aligned}
+\hat{Y_{i} } &= \hat{\beta_{0}} + \hat{\beta_{1}}\bar{X} \\
+&= \bar{Y} - \hat{\beta_{1}}\bar{X} + \hat{\beta_{1}}\bar{X} \\
+&= \bar{Y}
+\end{aligned}
+$$
+
+Therefore, it always goes through the point $(\bar{X}, \bar{Y})$. 
+
+###c
+The maximum likelihood method is shown below: 
+$$
+L(\beta_{0}, \beta_{1}, \sigma^2) = \prod_{i=1}^{n} \frac{1}{\sqrt{2\pi\sigma^2}}exp(-\frac{(Y_{i} - \beta_{0} - \beta_{1}X_{i})^2}{2\sigma^2})
+$$ 
+We take the log transformation and then obtain:
+$$
+ln L(\beta_{0}, \beta_{1}, \sigma^2) = -\frac{n}{2}log(2\pi) - nlog(\sigma)
+-\frac{(Y_{i} - \beta_{0} - \beta_{1}X_{i})^2}{2\sigma^2}
+$$ 
+
+Take derivative with respect to $\sigma$ and set to zero, we have:
+
+$$
+\begin{align}
+n\frac{1}{\sigma} - \frac{1}{\sigma^3}(Y_{i} - \beta_{0} - \beta_{1}X_{i})^2 = 0\\
+\hat{\sigma^2} = \frac{1}{n}(Y_{i} - \beta_{0} - \beta_{1}X_{i})^2
+\end{align}
+$$
+To get expected value of $\sigma^2$, we take derivative at both sides and then set to zero:
+
+$$
+\begin{align}
+E(\hat{\sigma^2}) &= E( \frac{1}{n}(Y_{i} - \beta_{0} - \beta_{1}X_{i})^2)\\
+&= \frac{1}{n}E((Y_{i} - \beta_{0} - \beta_{1}X_{i})^2)\\
+
+\end{align} 
+
+$$
+
+
+
+
+
+##Problem 2
+Here is the **code chunk** to load the data file
+```{r message=FALSE, warning=FALSE}
+heartdisease_df <- read_csv(file = "./data/HeartDisease.csv") %>% 
+  mutate(gender = as.numeric(gender))
+```
+
+###a
+There are in total `r dim(heartdisease_df)[1]` observations and `r dim(heartdisease_df)[2]` variables. The main outcome is 'total cost'. The main predictor is the ‘number of emergency room (ER) visits’, which is 'ERvisits' in the data set. The other important covariants including ‘age’, ‘gender’, ‘number of complications’ that arose during treatment, and ‘duration of treatment condition’, which in the data are indicated as 'age', 'gender', 'complications' and 'duration' repectively.
+
+The minimum, first quatile, median, mean, third quatile and maximum value of age, number of complications and duration of treatment conditions are shown below repectively. 
+```{r}
+summary(heartdisease_df$age)
+summary(heartdisease_df$duration)
+```
+
+In the `r dim(heartdisease_df)[1]` observations, there are xx male and xx female. Also, there are 
+
+###b
+Investigate the shape of the distribution for variable ‘total cost’ and try different transformations, if needed.
+```{r message=FALSE, warning=FALSE}
+heartdisease_df %>% 
+  ggplot(aes(x = totalcost))+geom_histogram()
+```
+Since the plot is extremely left-skewed, we tried log transformation and then obtained a approximately normal distribution.
+
+```{r message=FALSE, warning=FALSE}
+
+heartdisease_df %>% 
+  ggplot(aes(x = log(totalcost)))+geom_histogram()
+```
+
+###c
+```{r}
+heartdisease_df <- heartdisease_df %>% 
+  mutate(comp_bin = complications)
+```
+
+
+###d
+
+
+```{r}
+p <-ggplot(heartdisease_df, aes(x = ERvisits, y = log(totalcost)))+geom_point()+
+  geom_smooth(method = "lm", se = FALSE)+
+  labs(
+    title = "ERvisits VS Total Cost",
+    x = "ERvisits",
+    y = "Total Cost"
+  )
+p
+
+heartdisease_df <- heartdisease_df %>% 
+  mutate(logtotalcost = log(totalcost)) %>% 
+  filter(logtotalcost != -Inf)
+
+simreg_result<- lm(heartdisease_df$logtotalcost~ heartdisease_df$ERvisits)
+summary(simreg_result)
+```
+
+As we can see from the results above, for one unit of ERvisit change, we estimate there is  e^(0.22672) change in total cost. The p-value is extremely small, which means that the ER visits is significant to the change of total cost. 
+
+###e
+####1
+
+```{r}
+mulreg_result_21<- lm(heartdisease_df$logtotalcost~ heartdisease_df$ERvisits*heartdisease_df$comp_bin)
+summary(mulreg_result_21) %>% 
+  broom::tidy()
+```
+It is an effect modifier. 
+
+###e
+####2
+```{r}
+mulreg_result_22<- lm(heartdisease_df$logtotalcost~ heartdisease_df$ERvisits + heartdisease_df$comp_bin)
+summary(mulreg_result_22) %>% 
+  broom::tidy()
+```
+It is a confounder
+
+###e
+####3
+Not include 
+
+###f
+####1
+```{r}
+mulreg_result_23<- lm(heartdisease_df$logtotalcost~ heartdisease_df$ERvisits + heartdisease_df$comp_bin + heartdisease_df$age + heartdisease_df$gender + heartdisease_df$duration)
+summary(mulreg_result_23) 
+qf(p =0.05, df1 = 5, df2 = 779)
+anova(simreg_result,mulreg_result_23) %>% 
+  broom::tidy()
+```
+
+
+
+##Problem 3
+```{r massage = FALSE, warning = FALSE}
+patsat_df<-read_csv(file = "./data/PatSatisfaction.csv") %>% 
+  janitor::clean_names()
+```
+
+###a
+
+```{r}
+round(cor(patsat_df),3)
+```
+
+###b
+
+```{r}
+mulreg_result_31 <- lm(safisfaction ~ age + severity + anxiety, data = patsat_df)
+summary(mulreg_result_31)
+```
+
+
+The hypothesis is that:
+H_{o} is : beta_1 = beta_2 =... = 0
+H_{1) is: at least one of the beta is not zero
+
+Decision rules: 
+
+Conclusion: 
+From the test above, we can see that 
+
+###c
+```{r}
+summary(mulreg_result_31)
+confint(mulreg_result_31,level=0.95)
+```
+
+###d
+
+```{r}
+predict(mulreg_result_31,data.frame(age = 35, severity = 42, anxiety = 2.1),interval="confidence")
+```
+
+
+###e
+```{r}
+mulreg_result_3 <- lm(safisfaction ~ age + severity, data = patsat_df)
+mulreg_result_4<- lm(safisfaction ~ age + severity + anxiety , data = patsat_df)
+summary(mulreg_result_3)
+summary(mulreg_result_4)
+anova(mulreg_result_3,mulreg_result_4)
+qf(p =0.05, df1 = 1, df2 = 785-3-1)
+mulreg_result_5 <- lm(safisfaction ~ (age + severity)*anxiety , data = patsat_df)
+summary(mulreg_result_5)
+```
+
+
+
+
+
+
+
+
+
 
