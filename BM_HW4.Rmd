@@ -1,8 +1,8 @@
 ---
 title: "BM_HW4"
-author: "Coco"
+author: "Coco Zou (xz2809)"
 date: "11/9/2018"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -35,7 +35,9 @@ E(\hat{\beta_{1}}) &= E(\frac{\sum_{i=1}^{n} (X_{i} - \bar{X})(Y_{i} - \bar{Y})}
 &= \beta_{1}E(\frac{\sum_{i=1}^{n} (X_{i} - \bar{X})(X_{i})} {\sum_{i=1}^{n} (X_{i} - \bar{X})X_{i}})\\
 &= \beta_{1}
 \end{aligned}
+$$
 
+$$
 \begin{aligned}
 E(\hat{\beta_{0}}) &= E(\bar{Y} - \hat{\beta_{1}}\bar{X}) \\
 &=\bar{Y} - \bar{X}E(\hat{\beta_{1}})\\
@@ -44,7 +46,7 @@ E(\hat{\beta_{0}}) &= E(\bar{Y} - \hat{\beta_{1}}\bar{X}) \\
 \end{aligned}
 $$
 
-##b
+###b
 The Least Sqaure line equation is:
 $$
 \hat{Y_{i} }= \hat{\beta_{0}} + \hat{\beta_{1}}X_{i}
@@ -81,19 +83,16 @@ n\frac{1}{\sigma} - \frac{1}{\sigma^3}(Y_{i} - \beta_{0} - \beta_{1}X_{i})^2 = 0
 \hat{\sigma^2} = \frac{1}{n}(Y_{i} - \beta_{0} - \beta_{1}X_{i})^2
 \end{align}
 $$
-To get expected value of $\sigma^2$, we take derivative at both sides and then set to zero:
-
+The calculation of expected value of the $\hat{\sigma}^2$ is shown below:
 $$
 \begin{align}
 E(\hat{\sigma^2}) &= E( \frac{1}{n}(Y_{i} - \beta_{0} - \beta_{1}X_{i})^2)\\
 &= \frac{1}{n}E((Y_{i} - \beta_{0} - \beta_{1}X_{i})^2)\\
-
+&= \frac{1}{n}E((Y_{i} - \bar{Y})^2)\\
+&= \frac{1}{n}*n*\sigma^2 \\
+&= \sigma^2
 \end{align} 
-
 $$
-
-
-
 
 
 ##Problem 2
@@ -112,14 +111,21 @@ summary(heartdisease_df$age)
 summary(heartdisease_df$duration)
 ```
 
-In the `r dim(heartdisease_df)[1]` observations, there are xx male and xx female. Also, there are 
+Also, the number of male, indicated as 1, and the number of female, indicated as 0 are shown below:
+
+```{r}
+as.data.frame(table(heartdisease_df$gender)) 
+```
+
 
 ###b
-Investigate the shape of the distribution for variable ‘total cost’ and try different transformations, if needed.
+Investigate the shape of the distribution for variable ‘total cost’:
+
 ```{r message=FALSE, warning=FALSE}
 heartdisease_df %>% 
   ggplot(aes(x = totalcost))+geom_histogram()
 ```
+
 Since the plot is extremely left-skewed, we tried log transformation and then obtained a approximately normal distribution.
 
 ```{r message=FALSE, warning=FALSE}
@@ -129,16 +135,21 @@ heartdisease_df %>%
 ```
 
 ###c
+Create a new variable called ‘comp_bin’ by dichotomizing ‘complications’: 0 if no complications, and 1 otherwise. The first five observations are shown below:
+
 ```{r}
 heartdisease_df <- heartdisease_df %>% 
-  mutate(comp_bin = complications)
+  mutate(comp_bin = case_when(complications == 0 ~ 0,
+                              TRUE ~ 1))
+heartdisease_df %>% 
+  head(5) %>% 
+  knitr::kable(digits = 1)
 ```
 
 
 ###d
-
-
-```{r}
+Fit a simple linear regression (SLR) between the original or transformed ‘total cost’ and predictor ‘ERvisits’. 
+```{r message=FALSE, warning=FALSE}
 p <-ggplot(heartdisease_df, aes(x = ERvisits, y = log(totalcost)))+geom_point()+
   geom_smooth(method = "lm", se = FALSE)+
   labs(
@@ -152,102 +163,144 @@ heartdisease_df <- heartdisease_df %>%
   mutate(logtotalcost = log(totalcost)) %>% 
   filter(logtotalcost != -Inf)
 
-simreg_result<- lm(heartdisease_df$logtotalcost~ heartdisease_df$ERvisits)
+simreg_result<- lm(logtotalcost~ ERvisits, data = heartdisease_df)
 summary(simreg_result)
 ```
 
-As we can see from the results above, for one unit of ERvisit change, we estimate there is  e^(0.22672) change in total cost. The p-value is extremely small, which means that the ER visits is significant to the change of total cost. 
+As we can see from the results above, for one unit of ERvisit change, we estimate there is  `r exp(0.22672)` change in total cost. The p-value is extremely small, which means that the ER visits is significant to the change of total cost. 
 
 ###e
-####1
-
+####i
+Test if ‘comp_bin’ is an effect modifier of the relationship between ‘total cost’ and
+‘ERvisits’.
 ```{r}
-mulreg_result_21<- lm(heartdisease_df$logtotalcost~ heartdisease_df$ERvisits*heartdisease_df$comp_bin)
+mulreg_result_21<- lm(logtotalcost~ ERvisits*comp_bin, data = heartdisease_df)
 summary(mulreg_result_21) %>% 
   broom::tidy()
 ```
-It is an effect modifier. 
+
+The linear relationship between total coast and ERvisits and comp_bin is shown below:
+$$
+TC = 5.50 + 0.211*ER + 2.18*compbin - 0.0992*ER*compbin
+$$
+Since the p-value is 0.296, larger than 0.05. This means that we fail to reject the null hypothesis and conclude that comp_bin is not a effect modifier.
 
 ###e
 ####2
 ```{r}
-mulreg_result_22<- lm(heartdisease_df$logtotalcost~ heartdisease_df$ERvisits + heartdisease_df$comp_bin)
+mulreg_result_22<- lm(logtotalcost~ ERvisits + comp_bin, data = heartdisease_df)
 summary(mulreg_result_22) %>% 
   broom::tidy()
 ```
-It is a confounder
+The linear relationship between total coast and ERvisits and comp_bin is shown below:
+$$
+TC = 5.52 + 0.205*ER + 1.69*compbin
+$$
+Then we calculate the percentage change in the parameter estimate and determine whether confounding is present:
+$$
+\left\lvert{\frac{\beta_{crude} - \beta_{adjusted}}{\beta_{crude}}} \right\rvert= \left\rvert\frac{exp(0.2046) - exp(0.2267)}{exp(0.2046)}\right\rvert = 0.022
+$$
+Since the percentage change is 2.2%, which is less than 10%, this indicates that the association between total cost and ERvisit is not confounded by comp_bin.
 
 ###e
 ####3
-Not include 
+Since comp_bin is neither a effect modifier nor a counfounder, so ‘comp_bin’should not be included along with 'ERvisits'.
 
 ###f
-####1
-```{r}
-mulreg_result_23<- lm(heartdisease_df$logtotalcost~ heartdisease_df$ERvisits + heartdisease_df$comp_bin + heartdisease_df$age + heartdisease_df$gender + heartdisease_df$duration)
+####i
+```{r message=FALSE, warning=FALSE}
+mulreg_result_23<- lm(logtotalcost~ ERvisits + age + gender + duration, data = heartdisease_df)
 summary(mulreg_result_23) 
-qf(p =0.05, df1 = 5, df2 = 779)
+```
+The linear relationship between total coast and ERvisits, age, gender and duration is shown below:
+
+$$
+TC = 6.20 + 0.195*ER - 0.02age - 0.12gender + 0.006 duration
+$$
+The adjusted R-squared is 0.232, which means that it is not a very good linear regression.
+
+###f
+####ii
+To compare the SLR and MLR models, we need to perform partial ANOVA test.
+The null hypothesis $H_{0}: \beta{2} = \beta_{3} = \beta_{4} = 0$ 
+The alternative hypothesis $H_{1}: \beta{2} \neq 0$ OR $\beta_{3} \neq 0$ OR $\beta_{4} \neq 0$
+
+```{r message=FALSE, warning=FALSE}
 anova(simreg_result,mulreg_result_23) %>% 
   broom::tidy()
 ```
-
+From the anova test above, since the p-value is extremly small, we could reject the null hypothesis and larger model is prefered. I would use the MLR model to address the investigator’s objective.
 
 
 ##Problem 3
-```{r massage = FALSE, warning = FALSE}
+```{r massage = FALSE, warning = FALSE, results=FALSE}
 patsat_df<-read_csv(file = "./data/PatSatisfaction.csv") %>% 
   janitor::clean_names()
 ```
 
 ###a
-
+The correlation matrix is shown below:
 ```{r}
-round(cor(patsat_df),3)
+round(cor(patsat_df),3) %>% 
+  knitr::kable(digits = 2)
 ```
 
-###b
+As we can see from the table, all the correlation coefficient is above 0.6, which means the three variables have relatively high correlation wich repect to each other. 
 
+###b
+Fit a multiple regression model:
 ```{r}
 mulreg_result_31 <- lm(safisfaction ~ age + severity + anxiety, data = patsat_df)
 summary(mulreg_result_31)
+qf(0.95,3,42)
 ```
 
 
 The hypothesis is that:
-H_{o} is : beta_1 = beta_2 =... = 0
-H_{1) is: at least one of the beta is not zero
+$H_{0}$ is : $\beta_{1} = \beta_{2} = \beta_{3} = 0 $
+$H_{1}$ is: at least one of the $\beta$ is not zero
 
 Decision rules: 
+If test statistics $F* > F(1-\alpha;p,n-p-1) = F(0.95;3,46-3-1)$, reject $H_{0}$,
+If test statistics $F* \leqslant F(1-\alpha;p,n-p-1) = F(0.95;3,46-3-1)$, Fail to reject$H_{0}$
 
 Conclusion: 
-From the test above, we can see that 
+From the test above, we can see that p-value is extremely small and F-statistics is larger than $F(0.95;3,46-3-1)$, therefore, we could reject $H_{0}$ and conclude that there at least one of the $\beta$ is not zero, there is a regression relation between safisfaction and  age + severity + anxiety. 
 
 ###c
+Show the regression results for all estimated coefficients with 95% CIs.
 ```{r}
 summary(mulreg_result_31)
 confint(mulreg_result_31,level=0.95)
 ```
+For every unit change in severity of illness, the change in the satisfaction is approximately -0.44. We are 95% confident that the change in the satisfaction would fall into the range (-1.43,0.55). 
 
 ###d
-
+Obtain an interval estimate for a new patient’s satisfaction when Age=35, Severity=42, Anxiety=2.1.
 ```{r}
 predict(mulreg_result_31,data.frame(age = 35, severity = 42, anxiety = 2.1),interval="confidence")
 ```
+The satisfaction of the new patient is approximately 71.68 according to the model. We are 95% confident of the satisfaction of the new patient would fall into the range (64.24, 79.13). 
 
 
 ###e
+Test whether ‘anxiety level’ can be dropped from the regression model, given the other two
+covariates are retained.
 ```{r}
 mulreg_result_3 <- lm(safisfaction ~ age + severity, data = patsat_df)
 mulreg_result_4<- lm(safisfaction ~ age + severity + anxiety , data = patsat_df)
-summary(mulreg_result_3)
-summary(mulreg_result_4)
 anova(mulreg_result_3,mulreg_result_4)
-qf(p =0.05, df1 = 1, df2 = 785-3-1)
-mulreg_result_5 <- lm(safisfaction ~ (age + severity)*anxiety , data = patsat_df)
-summary(mulreg_result_5)
+qf(p =0.05, df1 = 1, df2 = 46-3-1)
 ```
+The hypothesis is that:
+$H_{0}$ is : $\beta_{3} = 0 $
+$H_{1}$ is:  $\beta_3$ is not zero
 
+Decision rules: 
+If test statistics $F* > F(1-\alpha;dfL-dfS,dfL) = F(0.95;1,46-3-1)$, reject $H_{0}$,
+If test statistics $F* \leqslant F(1-\alpha;p,n-p-1) = F(0.95;1,46-3-1)$, Fail to reject$H_{0}$
 
+From the test above, the F-statistics is 3.60, which is larger than the $F(0.95;1,46-3-1)$. Although p-value is larger than 0.05, we still reject $H_{0}$ because p-value maybe distorted by the correlation. We conclude that $\beta_3$ is not zero and ‘anxiety level’ should be concluded in the model. 
 
 
 

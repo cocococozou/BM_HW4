@@ -1,0 +1,760 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={BM\_HW4},
+            pdfauthor={Coco Zou (xz2809)},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{longtable,booktabs}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{BM\_HW4}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Coco Zou (xz2809)}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{11/9/2018}
+
+
+\begin{document}
+\maketitle
+
+\subsection{Problem 1}\label{problem-1}
+
+\subsubsection{a}\label{a}
+
+The Least Squares estimators of \(\beta_{0}\) and \(\beta_{1}\) are
+shown below: \[
+\begin{aligned}
+\hat{\beta_{0}} &= \bar{Y} - \hat{\beta_{1}}\bar{X}\\
+\hat{\beta_{1}} &= \frac{\sum_{i=1}^{n} (X_{i} - \bar{X})(Y_{i} - \bar{Y})} {\sum_{i=1}^{n} (X_{i} - \bar{X})^2} \\
+&= \frac{\sum_{i=1}^{n} X_{i}Y{i} - n\bar{X}\bar{Y}}{\sum_{i=1}^{n}X_{i}^2 - n\bar{X}^2}
+\end{aligned}
+\] To show they are unbiased estimators, we need to show
+\(E(\hat{\beta}_{0}) = \beta_{0}\) and
+\(E(\hat{\beta}_{1}) = \beta_{1}\)
+
+The derivation is shown below: \[
+\begin{aligned}
+E(\hat{\beta_{1}}) &= E(\frac{\sum_{i=1}^{n} (X_{i} - \bar{X})(Y_{i} - \bar{Y})} {\sum_{i=1}^{n} (X_{i} - \bar{X})^2}) \\
+&= E(\frac{\sum_{i=1}^{n} (X_{i} - \bar{X})Y_{i} - \sum_{i=1}^{n} (X_{i} - \bar{X})\bar{Y}} {\sum_{i=1}^{n} (X_{i} - \bar{X})^2})\\
+&= E(\frac{\sum_{i=1}^{n} (X_{i} - \bar{X})Y_{i}} {\sum_{i=1}^{n} (X_{i} - \bar{X})^2}) \\
+&= E(\frac{\sum_{i=1}^{n} (X_{i} - \bar{X})(\beta_{0}+\beta_{1}X_{i}+\epsilon_{i})} {\sum_{i=1}^{n} (X_{i} - \bar{X})^2}) \\
+&= E(\frac{\sum_{i=1}^{n} (X_{i} - \bar{X})(\beta_{1}X_{i})} {\sum_{i=1}^{n} (X_{i} - \bar{X})^2})\\
+&=\beta_{1}E( \frac{\sum_{i=1}^{n} (X_{i} - \bar{X})(X_{i})} {\sum_{i=1}^{n} (X_{i} - \bar{X})X_{i} - \sum_{i=1}^{n} (X_{i} - \bar{X})\bar{X}}) \\
+&= \beta_{1}E(\frac{\sum_{i=1}^{n} (X_{i} - \bar{X})(X_{i})} {\sum_{i=1}^{n} (X_{i} - \bar{X})X_{i}})\\
+&= \beta_{1}
+\end{aligned}
+\]
+
+\[
+\begin{aligned}
+E(\hat{\beta_{0}}) &= E(\bar{Y} - \hat{\beta_{1}}\bar{X}) \\
+&=\bar{Y} - \bar{X}E(\hat{\beta_{1}})\\
+&=\bar{Y} - \bar{X}\beta_{1}\\
+&=\beta_{0}
+\end{aligned}
+\]
+
+\subsubsection{b}\label{b}
+
+The Least Sqaure line equation is: \[
+\hat{Y_{i} }= \hat{\beta_{0}} + \hat{\beta_{1}}X_{i}
+\]
+
+We plug in the \(\bar{X}\) into the equation and have:
+
+\[
+\begin{aligned}
+\hat{Y_{i} } &= \hat{\beta_{0}} + \hat{\beta_{1}}\bar{X} \\
+&= \bar{Y} - \hat{\beta_{1}}\bar{X} + \hat{\beta_{1}}\bar{X} \\
+&= \bar{Y}
+\end{aligned}
+\]
+
+Therefore, it always goes through the point \((\bar{X}, \bar{Y})\).
+
+\subsubsection{c}\label{c}
+
+The maximum likelihood method is shown below: \[
+L(\beta_{0}, \beta_{1}, \sigma^2) = \prod_{i=1}^{n} \frac{1}{\sqrt{2\pi\sigma^2}}exp(-\frac{(Y_{i} - \beta_{0} - \beta_{1}X_{i})^2}{2\sigma^2})
+\] We take the log transformation and then obtain: \[
+ln L(\beta_{0}, \beta_{1}, \sigma^2) = -\frac{n}{2}log(2\pi) - nlog(\sigma)
+-\frac{(Y_{i} - \beta_{0} - \beta_{1}X_{i})^2}{2\sigma^2}
+\]
+
+Take derivative with respect to \(\sigma\) and set to zero, we have:
+
+\[
+\begin{align}
+n\frac{1}{\sigma} - \frac{1}{\sigma^3}(Y_{i} - \beta_{0} - \beta_{1}X_{i})^2 = 0\\
+\hat{\sigma^2} = \frac{1}{n}(Y_{i} - \beta_{0} - \beta_{1}X_{i})^2
+\end{align}
+\] The calculation of expected value of the \(\hat{\sigma}^2\) is shown
+below: \[
+\begin{align}
+E(\hat{\sigma^2}) &= E( \frac{1}{n}(Y_{i} - \beta_{0} - \beta_{1}X_{i})^2)\\
+&= \frac{1}{n}E((Y_{i} - \beta_{0} - \beta_{1}X_{i})^2)\\
+&= \frac{1}{n}E((Y_{i} - \bar{Y})^2)\\
+&= \frac{1}{n}*n*\sigma^2 \\
+&= \sigma^2
+\end{align} 
+\]
+
+\subsection{Problem 2}\label{problem-2}
+
+Here is the \textbf{code chunk} to load the data file
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{heartdisease_df <-}\StringTok{ }\KeywordTok{read_csv}\NormalTok{(}\DataTypeTok{file =} \StringTok{"./data/HeartDisease.csv"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{gender =} \KeywordTok{as.numeric}\NormalTok{(gender))}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{a}\label{a-1}
+
+There are in total 788 observations and 10 variables. The main outcome
+is `total cost'. The main predictor is the `number of emergency room
+(ER) visits', which is `ERvisits' in the data set. The other important
+covariants including `age', `gender', `number of complications' that
+arose during treatment, and `duration of treatment condition', which in
+the data are indicated as `age', `gender', `complications' and
+`duration' repectively.
+
+The minimum, first quatile, median, mean, third quatile and maximum
+value of age, number of complications and duration of treatment
+conditions are shown below repectively.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(heartdisease_df}\OperatorTok{$}\NormalTok{age)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   24.00   55.00   60.00   58.72   64.00   70.00
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(heartdisease_df}\OperatorTok{$}\NormalTok{duration)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    0.00   41.75  165.50  164.03  281.00  372.00
+\end{verbatim}
+
+Also, the number of male, indicated as 1, and the number of female,
+indicated as 0 are shown below:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{as.data.frame}\NormalTok{(}\KeywordTok{table}\NormalTok{(heartdisease_df}\OperatorTok{$}\NormalTok{gender)) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   Var1 Freq
+## 1    0  608
+## 2    1  180
+\end{verbatim}
+
+\subsubsection{b}\label{b-1}
+
+Investigate the shape of the distribution for variable `total cost':
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{heartdisease_df }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ totalcost))}\OperatorTok{+}\KeywordTok{geom_histogram}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{BM_HW4_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+Since the plot is extremely left-skewed, we tried log transformation and
+then obtained a approximately normal distribution.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{heartdisease_df }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \KeywordTok{log}\NormalTok{(totalcost)))}\OperatorTok{+}\KeywordTok{geom_histogram}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{BM_HW4_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\subsubsection{c}\label{c-1}
+
+Create a new variable called `comp\_bin' by dichotomizing
+`complications': 0 if no complications, and 1 otherwise. The first five
+observations are shown below:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{heartdisease_df <-}\StringTok{ }\NormalTok{heartdisease_df }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{comp_bin =} \KeywordTok{case_when}\NormalTok{(complications }\OperatorTok{==}\StringTok{ }\DecValTok{0} \OperatorTok{~}\StringTok{ }\DecValTok{0}\NormalTok{,}
+                              \OtherTok{TRUE} \OperatorTok{~}\StringTok{ }\DecValTok{1}\NormalTok{))}
+\NormalTok{heartdisease_df }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{5}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{knitr}\OperatorTok{::}\KeywordTok{kable}\NormalTok{(}\DataTypeTok{digits =} \DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}rrrrrrrrrrr@{}}
+\toprule
+id & totalcost & age & gender & interventions & drugs & ERvisits &
+complications & comorbidities & duration & comp\_bin\tabularnewline
+\midrule
+\endhead
+1 & 179.1 & 63 & 0 & 2 & 1 & 4 & 0 & 3 & 300 & 0\tabularnewline
+2 & 319.0 & 59 & 0 & 2 & 0 & 6 & 0 & 0 & 120 & 0\tabularnewline
+3 & 9310.7 & 62 & 0 & 17 & 0 & 2 & 0 & 5 & 353 & 0\tabularnewline
+4 & 280.9 & 60 & 1 & 9 & 0 & 7 & 0 & 2 & 332 & 0\tabularnewline
+5 & 18727.1 & 55 & 0 & 5 & 2 & 7 & 0 & 0 & 18 & 0\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{d}\label{d}
+
+Fit a simple linear regression (SLR) between the original or transformed
+`total cost' and predictor `ERvisits'.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p <-}\KeywordTok{ggplot}\NormalTok{(heartdisease_df, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ ERvisits, }\DataTypeTok{y =} \KeywordTok{log}\NormalTok{(totalcost)))}\OperatorTok{+}\KeywordTok{geom_point}\NormalTok{()}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_smooth}\NormalTok{(}\DataTypeTok{method =} \StringTok{"lm"}\NormalTok{, }\DataTypeTok{se =} \OtherTok{FALSE}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}
+    \DataTypeTok{title =} \StringTok{"ERvisits VS Total Cost"}\NormalTok{,}
+    \DataTypeTok{x =} \StringTok{"ERvisits"}\NormalTok{,}
+    \DataTypeTok{y =} \StringTok{"Total Cost"}
+\NormalTok{  )}
+\NormalTok{p}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{BM_HW4_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{heartdisease_df <-}\StringTok{ }\NormalTok{heartdisease_df }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{logtotalcost =} \KeywordTok{log}\NormalTok{(totalcost)) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{filter}\NormalTok{(logtotalcost }\OperatorTok{!=}\StringTok{ }\OperatorTok{-}\OtherTok{Inf}\NormalTok{)}
+
+\NormalTok{simreg_result<-}\StringTok{ }\KeywordTok{lm}\NormalTok{(logtotalcost}\OperatorTok{~}\StringTok{ }\NormalTok{ERvisits, }\DataTypeTok{data =}\NormalTok{ heartdisease_df)}
+\KeywordTok{summary}\NormalTok{(simreg_result)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = logtotalcost ~ ERvisits, data = heartdisease_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -6.2013 -1.1265  0.0191  1.2668  4.2797 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  5.53771    0.10362   53.44   <2e-16 ***
+## ERvisits     0.22672    0.02397    9.46   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.772 on 783 degrees of freedom
+## Multiple R-squared:  0.1026, Adjusted R-squared:  0.1014 
+## F-statistic:  89.5 on 1 and 783 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+As we can see from the results above, for one unit of ERvisit change, we
+estimate there is 1.2544786 change in total cost. The p-value is
+extremely small, which means that the ER visits is significant to the
+change of total cost.
+
+\subsubsection{e}\label{e}
+
+\paragraph{i}\label{i}
+
+Test if `comp\_bin' is an effect modifier of the relationship between
+`total cost' and `ERvisits'.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mulreg_result_}\DecValTok{21}\NormalTok{<-}\StringTok{ }\KeywordTok{lm}\NormalTok{(logtotalcost}\OperatorTok{~}\StringTok{ }\NormalTok{ERvisits}\OperatorTok{*}\NormalTok{comp_bin, }\DataTypeTok{data =}\NormalTok{ heartdisease_df)}
+\KeywordTok{summary}\NormalTok{(mulreg_result_}\DecValTok{21}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{broom}\OperatorTok{::}\KeywordTok{tidy}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 4 x 5
+##   term              estimate std.error statistic   p.value
+##   <chr>                <dbl>     <dbl>     <dbl>     <dbl>
+## 1 (Intercept)         5.50      0.103      53.1  1.36e-261
+## 2 ERvisits            0.211     0.0245      8.61 3.99e- 17
+## 3 comp_bin            2.18      0.546       3.99 7.17e-  5
+## 4 ERvisits:comp_bin  -0.0993    0.0948     -1.05 2.96e-  1
+\end{verbatim}
+
+The linear relationship between total coast and ERvisits and comp\_bin
+is shown below: \[
+TC = 5.50 + 0.211*ER + 2.18*compbin - 0.0992*ER*compbin
+\] Since the p-value is 0.296, larger than 0.05. This means that we fail
+to reject the null hypothesis and conclude that comp\_bin is not a
+effect modifier.
+
+\subsubsection{e}\label{e-1}
+
+\paragraph{2}\label{section}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mulreg_result_}\DecValTok{22}\NormalTok{<-}\StringTok{ }\KeywordTok{lm}\NormalTok{(logtotalcost}\OperatorTok{~}\StringTok{ }\NormalTok{ERvisits }\OperatorTok{+}\StringTok{ }\NormalTok{comp_bin, }\DataTypeTok{data =}\NormalTok{ heartdisease_df)}
+\KeywordTok{summary}\NormalTok{(mulreg_result_}\DecValTok{22}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{broom}\OperatorTok{::}\KeywordTok{tidy}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 3 x 5
+##   term        estimate std.error statistic   p.value
+##   <chr>          <dbl>     <dbl>     <dbl>     <dbl>
+## 1 (Intercept)    5.52     0.101      54.5  1.68e-268
+## 2 ERvisits       0.205    0.0237      8.63 3.33e- 17
+## 3 comp_bin       1.69     0.275       6.13 1.38e-  9
+\end{verbatim}
+
+The linear relationship between total coast and ERvisits and comp\_bin
+is shown below: \[
+TC = 5.52 + 0.205*ER + 1.69*compbin
+\] Then we calculate the percentage change in the parameter estimate and
+determine whether confounding is present: \[
+\left\lvert{\frac{\beta_{crude} - \beta_{adjusted}}{\beta_{crude}}} \right\rvert= \left\rvert\frac{exp(0.2046) - exp(0.2267)}{exp(0.2046)}\right\rvert = 0.022
+\] Since the percentage change is 2.2\%, which is less than 10\%, this
+indicates that the association between total cost and ERvisit is not
+confounded by comp\_bin.
+
+\subsubsection{e}\label{e-2}
+
+\paragraph{3}\label{section-1}
+
+Since comp\_bin is neither a effect modifier nor a counfounder, so
+`comp\_bin'should not be included along with 'ERvisits'.
+
+\subsubsection{f}\label{f}
+
+\paragraph{i}\label{i-1}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mulreg_result_}\DecValTok{23}\NormalTok{<-}\StringTok{ }\KeywordTok{lm}\NormalTok{(logtotalcost}\OperatorTok{~}\StringTok{ }\NormalTok{ERvisits }\OperatorTok{+}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{gender }\OperatorTok{+}\StringTok{ }\NormalTok{duration, }\DataTypeTok{data =}\NormalTok{ heartdisease_df)}
+\KeywordTok{summary}\NormalTok{(mulreg_result_}\DecValTok{23}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = logtotalcost ~ ERvisits + age + gender + duration, 
+##     data = heartdisease_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -5.3012 -1.0790 -0.1215  1.0567  4.2854 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  6.1967450  0.5162986  12.002  < 2e-16 ***
+## ERvisits     0.1946147  0.0225477   8.631  < 2e-16 ***
+## age         -0.0249155  0.0087695  -2.841  0.00461 ** 
+## gender      -0.1189335  0.1408787  -0.844  0.39880    
+## duration     0.0057155  0.0004941  11.569  < 2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.639 on 780 degrees of freedom
+## Multiple R-squared:  0.2359, Adjusted R-squared:  0.232 
+## F-statistic:  60.2 on 4 and 780 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+The linear relationship between total coast and ERvisits, age, gender
+and duration is shown below:
+
+\[
+TC = 6.20 + 0.195*ER - 0.02age - 0.12gender + 0.006 duration
+\] The adjusted R-squared is 0.232, which means that it is not a very
+good linear regression.
+
+\subsubsection{f}\label{f-1}
+
+\paragraph{ii}\label{ii}
+
+To compare the SLR and MLR models, we need to perform partial ANOVA
+test. The null hypothesis
+\(H_{0}: \beta{2} = \beta_{3} = \beta_{4} = 0\) The alternative
+hypothesis \(H_{1}: \beta{2} \neq 0\) OR \(\beta_{3} \neq 0\) OR
+\(\beta_{4} \neq 0\)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{anova}\NormalTok{(simreg_result,mulreg_result_}\DecValTok{23}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{broom}\OperatorTok{::}\KeywordTok{tidy}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 2 x 6
+##   res.df   rss    df sumsq statistic   p.value
+## *  <dbl> <dbl> <dbl> <dbl>     <dbl>     <dbl>
+## 1    783 2460.    NA   NA       NA   NA       
+## 2    780 2094.     3  365.      45.4  4.98e-27
+\end{verbatim}
+
+From the anova test above, since the p-value is extremly small, we could
+reject the null hypothesis and larger model is prefered. I would use the
+MLR model to address the investigator's objective.
+
+\subsection{Problem 3}\label{problem-3}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{patsat_df<-}\KeywordTok{read_csv}\NormalTok{(}\DataTypeTok{file =} \StringTok{"./data/PatSatisfaction.csv"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{janitor}\OperatorTok{::}\KeywordTok{clean_names}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Parsed with column specification:
+## cols(
+##   Safisfaction = col_integer(),
+##   Age = col_integer(),
+##   Severity = col_integer(),
+##   Anxiety = col_double()
+## )
+\end{verbatim}
+
+\subsubsection{a}\label{a-2}
+
+The correlation matrix is shown below:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{round}\NormalTok{(}\KeywordTok{cor}\NormalTok{(patsat_df),}\DecValTok{3}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{knitr}\OperatorTok{::}\KeywordTok{kable}\NormalTok{(}\DataTypeTok{digits =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrrr@{}}
+\toprule
+& safisfaction & age & severity & anxiety\tabularnewline
+\midrule
+\endhead
+safisfaction & 1.00 & -0.79 & -0.60 & -0.64\tabularnewline
+age & -0.79 & 1.00 & 0.57 & 0.57\tabularnewline
+severity & -0.60 & 0.57 & 1.00 & 0.67\tabularnewline
+anxiety & -0.64 & 0.57 & 0.67 & 1.00\tabularnewline
+\bottomrule
+\end{longtable}
+
+As we can see from the table, all the correlation coefficient is above
+0.6, which means the three variables have relatively high correlation
+wich repect to each other.
+
+\subsubsection{b}\label{b-2}
+
+Fit a multiple regression model:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mulreg_result_}\DecValTok{31}\NormalTok{ <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(safisfaction }\OperatorTok{~}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{severity }\OperatorTok{+}\StringTok{ }\NormalTok{anxiety, }\DataTypeTok{data =}\NormalTok{ patsat_df)}
+\KeywordTok{summary}\NormalTok{(mulreg_result_}\DecValTok{31}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = safisfaction ~ age + severity + anxiety, data = patsat_df)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -18.3524  -6.4230   0.5196   8.3715  17.1601 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) 158.4913    18.1259   8.744 5.26e-11 ***
+## age          -1.1416     0.2148  -5.315 3.81e-06 ***
+## severity     -0.4420     0.4920  -0.898   0.3741    
+## anxiety     -13.4702     7.0997  -1.897   0.0647 .  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 10.06 on 42 degrees of freedom
+## Multiple R-squared:  0.6822, Adjusted R-squared:  0.6595 
+## F-statistic: 30.05 on 3 and 42 DF,  p-value: 1.542e-10
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{qf}\NormalTok{(}\FloatTok{0.95}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{42}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2.827049
+\end{verbatim}
+
+The hypothesis is that: \(H_{0}\) is : \$\beta\emph{\{1\} = \beta}\{2\}
+= \beta\_\{3\} = 0 \$ \(H_{1}\) is: at least one of the \(\beta\) is not
+zero
+
+Decision rules: If test statistics
+\(F* > F(1-\alpha;p,n-p-1) = F(0.95;3,46-3-1)\), reject \(H_{0}\), If
+test statistics \(F* \leqslant F(1-\alpha;p,n-p-1) = F(0.95;3,46-3-1)\),
+Fail to reject\(H_{0}\)
+
+Conclusion: From the test above, we can see that p-value is extremely
+small and F-statistics is larger than \(F(0.95;3,46-3-1)\), therefore,
+we could reject \(H_{0}\) and conclude that there at least one of the
+\(\beta\) is not zero, there is a regression relation between
+safisfaction and age + severity + anxiety.
+
+\subsubsection{c}\label{c-2}
+
+Show the regression results for all estimated coefficients with 95\%
+CIs.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(mulreg_result_}\DecValTok{31}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = safisfaction ~ age + severity + anxiety, data = patsat_df)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -18.3524  -6.4230   0.5196   8.3715  17.1601 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) 158.4913    18.1259   8.744 5.26e-11 ***
+## age          -1.1416     0.2148  -5.315 3.81e-06 ***
+## severity     -0.4420     0.4920  -0.898   0.3741    
+## anxiety     -13.4702     7.0997  -1.897   0.0647 .  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 10.06 on 42 degrees of freedom
+## Multiple R-squared:  0.6822, Adjusted R-squared:  0.6595 
+## F-statistic: 30.05 on 3 and 42 DF,  p-value: 1.542e-10
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{confint}\NormalTok{(mulreg_result_}\DecValTok{31}\NormalTok{,}\DataTypeTok{level=}\FloatTok{0.95}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                  2.5 %      97.5 %
+## (Intercept) 121.911727 195.0707761
+## age          -1.575093  -0.7081303
+## severity     -1.434831   0.5508228
+## anxiety     -27.797859   0.8575324
+\end{verbatim}
+
+For every unit change in severity of illness, the change in the
+satisfaction is approximately -0.44. We are 95\% confident that the
+change in the satisfaction would fall into the range (-1.43,0.55).
+
+\subsubsection{d}\label{d-1}
+
+Obtain an interval estimate for a new patient's satisfaction when
+Age=35, Severity=42, Anxiety=2.1.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{predict}\NormalTok{(mulreg_result_}\DecValTok{31}\NormalTok{,}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{age =} \DecValTok{35}\NormalTok{, }\DataTypeTok{severity =} \DecValTok{42}\NormalTok{, }\DataTypeTok{anxiety =} \FloatTok{2.1}\NormalTok{),}\DataTypeTok{interval=}\StringTok{"confidence"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit      lwr      upr
+## 1 71.68332 64.23592 79.13071
+\end{verbatim}
+
+The satisfaction of the new patient is approximately 71.68 according to
+the model. We are 95\% confident of the satisfaction of the new patient
+would fall into the range (64.24, 79.13).
+
+\subsubsection{e}\label{e-3}
+
+Test whether `anxiety level' can be dropped from the regression model,
+given the other two covariates are retained.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mulreg_result_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(safisfaction }\OperatorTok{~}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{severity, }\DataTypeTok{data =}\NormalTok{ patsat_df)}
+\NormalTok{mulreg_result_}\DecValTok{4}\NormalTok{<-}\StringTok{ }\KeywordTok{lm}\NormalTok{(safisfaction }\OperatorTok{~}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{severity }\OperatorTok{+}\StringTok{ }\NormalTok{anxiety , }\DataTypeTok{data =}\NormalTok{ patsat_df)}
+\KeywordTok{anova}\NormalTok{(mulreg_result_}\DecValTok{3}\NormalTok{,mulreg_result_}\DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Model 1: safisfaction ~ age + severity
+## Model 2: safisfaction ~ age + severity + anxiety
+##   Res.Df    RSS Df Sum of Sq      F  Pr(>F)  
+## 1     43 4613.0                              
+## 2     42 4248.8  1    364.16 3.5997 0.06468 .
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{qf}\NormalTok{(}\DataTypeTok{p =}\FloatTok{0.05}\NormalTok{, }\DataTypeTok{df1 =} \DecValTok{1}\NormalTok{, }\DataTypeTok{df2 =} \DecValTok{46}\OperatorTok{-}\DecValTok{3}\OperatorTok{-}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.003979415
+\end{verbatim}
+
+The hypothesis is that: \(H_{0}\) is : \$\beta\_\{3\} = 0 \$ \(H_{1}\)
+is: \(\beta_3\) is not zero
+
+Decision rules: If test statistics
+\(F* > F(1-\alpha;dfL-dfS,dfL) = F(0.95;1,46-3-1)\), reject \(H_{0}\),
+If test statistics
+\(F* \leqslant F(1-\alpha;p,n-p-1) = F(0.95;1,46-3-1)\), Fail to
+reject\(H_{0}\)
+
+From the test above, the F-statistics is 3.60, which is larger than the
+\(F(0.95;1,46-3-1)\). Although p-value is larger than 0.05, we still
+reject \(H_{0}\) because p-value maybe distorted by the correlation. We
+conclude that \(\beta_3\) is not zero and `anxiety level' should be
+concluded in the model.
+
+
+\end{document}
